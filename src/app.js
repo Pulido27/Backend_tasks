@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import authRoutes from './routes/auth.routes.js';
+import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -16,8 +17,6 @@ app.get('/healt',(req, res) => {
     });
 });
 
-app.get('/ping', (req, res) => {
-    res.json({message: "pong"})
-})
+app.use(errorHandler);
 
 export default app;
