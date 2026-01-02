@@ -1,5 +1,13 @@
-const path = require('path');
-require('dotenv').config({path: path.resolve(__dirname, '../.env')});
+import path from 'path';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({path: path.resolve(__dirname, '../.env')});
+
+
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is not defined');
@@ -11,4 +19,4 @@ const env = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
 };
 
-module.exports = env;
+export default env;
