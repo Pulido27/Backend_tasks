@@ -16,7 +16,7 @@ export async function createTask({ userId, title}) {
     };
 }
 
-export async function getTasksByUser(userId) {
+export async function findByUserId(userId) {
 
     const query = `
     SELECT id, title, completed, created_at
@@ -25,4 +25,6 @@ export async function getTasksByUser(userId) {
     ORDER BY CREATED_AT DESC
     `
     const [rows] = await pool.execute(query, [userId])
+
+    return rows;
 }
