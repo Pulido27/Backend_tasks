@@ -28,6 +28,4 @@ export function authenticate(req, res, next) {
     } catch (error) {
         throw new AppError('Invalid or expired token', 401);
     }
-
-
 }

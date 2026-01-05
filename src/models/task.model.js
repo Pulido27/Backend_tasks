@@ -28,3 +28,24 @@ export async function findByUserId(userId) {
 
     return rows;
 }
+
+export async function findByIdAndUser(taskId,userId) {
+    const query = `
+    SELECT id, completed
+    FROM tasks
+    WHERE id = ? AND user_id = ?;
+    `
+    const [rows] = await pool.execute(query, [taskId, userId]);
+    return rows.length ? rows[0] : null;
+}
+
+export async function updateCompleted(taskId, completed) {
+    const query = `
+        UPDATE tasks
+        SET completed = ?
+        WHERE id = ?
+    `;
+
+    await pool.execute(query, [completed, taskId]);
+}
+
