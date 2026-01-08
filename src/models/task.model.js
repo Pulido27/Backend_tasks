@@ -22,22 +22,31 @@ export async function findByUserId(userId) {
     SELECT id, title, completed, created_at
     FROM tasks 
     WHERE user_id = ?
-    ORDER BY CREATED_AT DESC
+        AND deleted_at IS NULL
+        ORDER BY CREATED_AT DESC
     `
     const [rows] = await pool.execute(query, [userId])
 
     return rows;
 }
 
-export async function findByIdAndUser(taskId,userId) {
-    const query = `
-    SELECT id, completed
-    FROM tasks
-    WHERE id = ? AND user_id = ?;
-    `
+export async function findTaskByIdAndUser({ taskId, userId, onlyActive = true }) {
+    
+    let query = `
+        SELECT id, title, completed, deleted_at
+        FROM tasks
+        WHERE id = ?
+        AND user_id = ?
+    `;
+
+    if (onlyActive) {
+        query += ` AND deleted_at IS NULL`;
+    }
+
     const [rows] = await pool.execute(query, [taskId, userId]);
     return rows.length ? rows[0] : null;
 }
+
 
 export async function updateCompleted(taskId, completed) {
     const query = `
@@ -49,3 +58,13 @@ export async function updateCompleted(taskId, completed) {
     await pool.execute(query, [completed, taskId]);
 }
 
+export async function softDeletedTask(taskId) {
+    const query = `
+        UPDATE tasks 
+        SET deleted_at = NOW()
+        WHERE id = ?
+    `;
+
+    await pool.execute(query,[taskId]);
+
+}

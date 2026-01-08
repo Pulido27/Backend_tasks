@@ -53,3 +53,19 @@ export async function completeTask(req, res, next) {
     next(error);
   }
 }
+
+export async function deleteTask(req, res, next) {
+  try{
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    await taskService.deleteTask({
+      taskId: id,
+      userId,
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}

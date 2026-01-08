@@ -49,5 +49,18 @@ export async function completedTask({ taskId, userId }) {
     id: taskId,
     completed: true,
   };
+}
 
+export async function deleteTask({ taskId, userId}) {
+    if (!taskId) {
+        throw new AppError('Task Id is required', 400);
+    }
+
+    const task = await taskModel.findTaskByIdAndUser(taskId, userId);
+
+    if (!task) {
+        throw new AppError('Task not found', 404);
+    }
+
+    await taskModel.softDeletedTask(taskId);
 }
